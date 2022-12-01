@@ -1,0 +1,1 @@
+from client.registration_of_students import registration_student
