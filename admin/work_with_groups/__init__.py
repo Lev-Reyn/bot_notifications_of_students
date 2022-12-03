@@ -1,0 +1,1 @@
+from admin.work_with_groups import add_new_group_handlers
