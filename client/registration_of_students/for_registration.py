@@ -3,6 +3,9 @@ import json
 import os
 
 
+#  измененить надо, так как json будет в папке data_base
+
+
 class Registration:
     """класс для регистрации студента"""
 

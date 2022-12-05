@@ -28,8 +28,8 @@ async def download_num_card_student_process_command(message: types.Message, stat
     await state.finish()
 
 
-@dp.message_handler(state='*', commands=['отмена'])
-@dp.message_handler(Text(equals='отмена', ignore_case=True), state="*")
+# @dp.message_handler(state='*', commands=['отмена'])
+# @dp.message_handler(Text(equals='отмена', ignore_case=True), state="*")
 async def cancel_process_command(messgae: types.Message, state: FSMContext):
     """выключает машину состояний, при том любую, которая была б включена"""
     current_state = await state.get_state()
@@ -39,7 +39,7 @@ async def cancel_process_command(messgae: types.Message, state: FSMContext):
     await messgae.reply('Ok')
 
 
-def register_handlers_admin(dp: Dispatcher):
+def register_handlers_client_add_new_students(dp: Dispatcher):
     dp.register_message_handler(download_process_command, commands=['загрузить'], state=None)
     dp.register_message_handler(download_num_card_student_process_command, state=FSMClientRegistration.num_card_student)
     dp.register_message_handler(cancel_process_command, state='*', commands=['отмена'])
