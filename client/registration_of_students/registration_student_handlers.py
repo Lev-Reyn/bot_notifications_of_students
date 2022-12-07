@@ -4,6 +4,7 @@ from create_bot import dp
 from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters import Text
 from client.registration_of_students.for_registration import Registration
+from admin.add_new_students.add_new_students_handlers import message_for_add_in_group_callback
 
 
 class FSMClientRegistration(StatesGroup):
@@ -33,6 +34,7 @@ async def download_num_card_student_process_command(message: types.Message, stat
 async def cancel_process_command(messgae: types.Message, state: FSMContext):
     """выключает машину состояний, при том любую, которая была б включена"""
     current_state = await state.get_state()
+    message_for_add_in_group_callback.delete_last_info()
     if current_state is None:
         return
     await state.finish()

@@ -6,7 +6,8 @@ from aiogram import types, Dispatcher
 from admin.add_new_students.add_new_students import AddNewStudent, MessageForCallback
 from keyboard.keyboard_admin.keyboard_add_new_student import inline_kb_groups_func
 from aiogram.dispatcher.filters import Text
-from data_base.sqllite_db import sql_get_all_groups
+from data_base.sqllite_db import sql_get_all_groups, sql_admin_add_student_in_table_group, \
+    sql_admin_add_student_in_table_group_delete_row, sql_get_groups_of_student
 
 
 class FSMAdminAddNewStudent(StatesGroup):
@@ -31,7 +32,7 @@ async def add_new_student_num_card_student_process_command(message: types.Messag
     """следующая команда (запускается после add_new_student_process_command) в машине состояний,
     которая принимает номер зачёчки студента"""
     async with state.proxy() as data:
-        data['num_card_student'] = message.text
+        data['num_student_card'] = message.text
     if not AddNewStudent(data).check_num_card_student():
         await message.reply(f'Студент с номером зачётки {data.get("num_card_student")} уже присутствует, но вы можете'
                             f' изменить по нему данные, либо воспользуйтесь командой /отмена что бы не изменять по нему'
@@ -79,7 +80,8 @@ async def add_new_student_group_process_command(message: types.Message, state: F
     async with state.proxy() as data:
         data['group'] = message_for_add_in_group_callback.num_groups  # номера всех групп, куда добавить
         await message.reply(AddNewStudent(data).add_new_student_with_answer())
-    message_for_add_in_group_callback.delete_last_info()
+
+    message_for_add_in_group_callback.delete_last_info()  # удаляем данные сообщения
     await state.finish()
 
 

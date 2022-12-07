@@ -18,4 +18,4 @@ add_new_students_handlers.register_handlers_admin_add_new_group(dp)
 executor.start_polling(dp, skip_updates=True, on_startup=on_start)
 
 
-# доделать добавление нового студента
+# доделать добавление нового студента (что бы в таблицы групп добавлялась инфа)

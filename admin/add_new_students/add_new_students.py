@@ -13,7 +13,7 @@ class AddNewStudent:
         lst_num_student_card = sql_get_one_column('main_data_base', 'num_student_card')
         # print(lst_num_student_card)
         # print(self.data.get("num_card_student"))
-        if self.data.get("num_card_student") not in lst_num_student_card:
+        if self.data.get("num_student_card") not in lst_num_student_card:
             return True
         return False
         # sql_get_one_column('') # проверить как работает функция
@@ -29,7 +29,7 @@ class AddNewStudent:
     def add_new_student_with_answer(self):
         if self.add_new_student():
             return f'Студент <b>{self.data.get("name_student")}</b>\nномер зачётки: <b>' \
-                   f'{self.data.get("num_card_student")}</b>\nуспешно добавлен в группу <b>{self.data.get("group")}</b>'
+                   f'{self.data.get("num_student_card")}</b>\nуспешно добавлен в группу <b>{self.data.get("group")}</b>'
         else:
             return f'Данные пидора изменены'
 

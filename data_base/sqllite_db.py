@@ -51,40 +51,105 @@ def sql_get_one_column(name_table: str, name_column: str):
     return result
 
 
+def sql_admin_add_student_in_table_group(data, num_group: int):
+    """функция, которая добавляет в таблицу group_ данные о студенте, когда он только регистрируется,
+    num_group - номер группы, в которую добавить"""
+    print(data.get('num_student_card'))
+    id = cur.execute(
+        'SELECT id FROM main_data_base WHERE num_student_card == {0}'.format(data.get('num_student_card'))).fetchone()[
+        0]
+
+    cur.execute(
+        'INSERT INTO group_{0}(id, num_student_card, name_student, Status) VALUES(?, ?, ?, ?)'.format(num_group),
+        (id, data.get('num_student_card'), data.get('name_student'), -1))
+    base.commit()
+
+    print('данные добавлены', id, data.get('num_student_card'), data.get('name_student'), -1)
+
+
+def sql_admin_add_student_in_table_group_delete_row(data, num_group: int):
+    """удаляет данные об этом студенте в группе (таблице group_)
+    data - что-то типо словаря из state.proxy()
+    num_group - в какой группе находится этот студент, что бы его от туда удалить
+    """
+    cur.execute('DELETE FROM group_{0} WHERE num_student_card = ?'.format(num_group), (data.get('num_student_card'),))
+    base.commit()
+
+
+def sql_get_groups_of_student(num_student_card=False, id=False, id_telegram=False):
+    """получить номера групп, в которых находится студент,
+    а сделать это можно по любому из параметров"""
+    if num_student_card:
+        groups = cur.execute(
+            'SELECT * FROM main_data_base WHERE num_student_card == {0}'.format(num_student_card)).fetchmany()
+    elif id:
+        groups = cur.execute(
+            'SELECT * FROM main_data_base WHERE id == {0}'.format(id)).fetchmany()
+    elif id_telegram:
+        groups = cur.execute(
+            'SELECT * FROM main_data_base WHERE id_telegram == {0}'.format(id_telegram)).fetchmany()
+    else:
+        return False
+    if len(groups) == 0:
+        return False
+
+    groups = groups[0][3:]  # берём только столбцы групп
+    groups = [i for i in range(len(groups)) if groups[i] == 1]  # получаем список групп, в которых он онаходится
+    print(groups)
+    return groups
+
+
+def sql_admin_add_student_in_table_groups(data, add_or_update=True):
+    """
+    пока что это функция, которая добавляет новых студентов, в таблицы group_
+    add_or_update = True - если нового студента добавляем
+    add_or_update = False - если обновить данные по студенту нужно (то есть старую информацию удалить и новую закинуть)
+    """
+    if not add_or_update:  # если нет, значит это на обновление данных (удаляем старые и добавляем новые)
+        groups = sql_get_groups_of_student(num_student_card=data.get('num_student_card'))
+        for num_group in groups:
+            sql_admin_add_student_in_table_group_delete_row(data=data, num_group=num_group)
+
+    for num_group in data.get('group'):
+        sql_admin_add_student_in_table_group(data, num_group=num_group)
+
+
 def sql_admin_add_new_student(data, command=True):
     """изменить данные или добавить data - типо словаря из state.proxi(),
     а command=True если нужно добавить нового студента
     command=False если нужно изменить данные студента"""
 
-
     # добавить нового студента
     if command:
         cur.execute('INSERT INTO main_data_base(num_student_card, group_{0}) VALUES(?, ?)'.format(data.get('group')[0]),
-                    (data.get('num_card_student'), 1))
+                    (data.get('num_student_card'), 1))
         base.commit()
         if len(data.get('group')) == 1: return
         for group in data.get('group')[1:]:
             cur.execute(
                 'UPDATE main_data_base SET group_{0} == ? WHERE num_student_card == ?'.format(group),
-                (1, data.get('num_card_student')))
+                (1, data.get('num_student_card')))
             base.commit()
+
+        sql_admin_add_student_in_table_groups(data=data)  # закидываем данные в таблицы group_
+        # нужно обновить таблицу самой группы (групп)
 
     # изменить данные студента
     if not command:
-        # изменить данные студентов, нам нужно удалить старые данные
+        # изменить данные студентов, (нам нужно удалить старые данные, а потом закинуть новые туда)
+        sql_admin_add_student_in_table_groups(data=data, add_or_update=False)  # в таблицах group_ изменяем данные
         for group in sql_get_all_groups():
             cur.execute(
                 'UPDATE main_data_base SET group_{0} == ? WHERE num_student_card == ?'.format(group['num_group']),
-                (0, data.get('num_card_student')))
+                (0, data.get('num_student_card')))
             base.commit()
 
         """UPDATE main_data_base SET group_{0} == ? WHERE num_student_card = ?"""
         for group in data.get('group'):
             cur.execute(
                 'UPDATE main_data_base SET group_{0} == ? WHERE num_student_card == ?'.format(group),
-                (1, data.get('num_card_student')))
+                (1, data.get('num_student_card')))
             base.commit()
-
 
 
 def sql_get_all_groups():
@@ -95,7 +160,7 @@ def sql_get_all_groups():
             'num_group': group[0],
             'name_group': group[1]
         }
-    print(groups)
+    # print(groups)
     return groups
 
 
