@@ -1,1 +1,2 @@
 from admin.work_with_groups import add_new_group_handlers
+from admin.work_with_groups import get_info_about_students_handlers

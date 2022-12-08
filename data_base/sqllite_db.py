@@ -43,7 +43,7 @@ async def sql_add_new_table_group_command(state) -> int:
     return new_id_for_new_group
 
 
-def sql_get_one_column(name_table: str, name_column: str):
+def sql_get_one_column(name_table: str, name_column: str) -> list:
     """Принимает имя таблицы и имя столбца, возвращает список со всеми данными в этом столбцу"""
     result = cur.execute('SELECT {0} FROM {1}'.format(name_column, name_table)).fetchall()
     result = list(map(lambda id_group: id_group[0], result))
@@ -94,7 +94,7 @@ def sql_get_row(table='main_data_base', num_student_card=False, id=False, id_tel
     return groups
 
 
-def sql_get_groups_of_student(num_student_card=False, id=False, id_telegram=False):
+def sql_get_groups_of_student(num_student_card=False, id=False, id_telegram=False) -> list:
     """получить номера групп, в которых находится студент,
     а сделать это можно по любому из параметров"""
     groups = sql_get_row(num_student_card=num_student_card, id=id, id_telegram=id_telegram)
