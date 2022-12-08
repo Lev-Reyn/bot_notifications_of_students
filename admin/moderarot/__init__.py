@@ -1,0 +1,1 @@
+from admin.moderarot import moderator_handlers

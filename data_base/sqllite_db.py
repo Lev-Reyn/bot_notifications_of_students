@@ -44,7 +44,7 @@ async def sql_add_new_table_group_command(state) -> int:
 
 
 def sql_get_one_column(name_table: str, name_column: str):
-    """получает имя таблиы и номер столбца, возвращает список со всеми данными в этом столбцу"""
+    """Принимает имя таблицы и имя столбца, возвращает список со всеми данными в этом столбцу"""
     result = cur.execute('SELECT {0} FROM {1}'.format(name_column, name_table)).fetchall()
     result = list(map(lambda id_group: id_group[0], result))
     # print('new id for group is OK')
@@ -76,26 +76,32 @@ def sql_admin_add_student_in_table_group_delete_row(data, num_group: int):
     base.commit()
 
 
-def sql_get_groups_of_student(num_student_card=False, id=False, id_telegram=False):
-    """получить номера групп, в которых находится студент,
-    а сделать это можно по любому из параметров"""
+def sql_get_row(table='main_data_base', num_student_card=False, id=False, id_telegram=False):
+    """получить строку по одному из параметров из main_data_base"""
     if num_student_card:
         groups = cur.execute(
-            'SELECT * FROM main_data_base WHERE num_student_card == {0}'.format(num_student_card)).fetchmany()
+            'SELECT * FROM {0} WHERE num_student_card == {1}'.format(table, num_student_card)).fetchmany()
     elif id:
         groups = cur.execute(
-            'SELECT * FROM main_data_base WHERE id == {0}'.format(id)).fetchmany()
+            'SELECT * FROM {0} WHERE id == {1}'.format(table, id)).fetchmany()
     elif id_telegram:
         groups = cur.execute(
-            'SELECT * FROM main_data_base WHERE id_telegram == {0}'.format(id_telegram)).fetchmany()
+            'SELECT * FROM {0} WHERE id_telegram == {1}'.format(table, id_telegram)).fetchmany()
     else:
         return False
     if len(groups) == 0:
         return False
+    return groups
+
+
+def sql_get_groups_of_student(num_student_card=False, id=False, id_telegram=False):
+    """получить номера групп, в которых находится студент,
+    а сделать это можно по любому из параметров"""
+    groups = sql_get_row(num_student_card=num_student_card, id=id, id_telegram=id_telegram)
 
     groups = groups[0][3:]  # берём только столбцы групп
     groups = [i for i in range(len(groups)) if groups[i] == 1]  # получаем список групп, в которых он онаходится
-    print(groups)
+    # print(groups)
     return groups
 
 
@@ -162,6 +168,31 @@ def sql_get_all_groups():
         }
     # print(groups)
     return groups
+
+
+def sql_update_row(data: dict):
+    """
+    data: dict - принимает словарь в качкстве аргумента, с такой структурой ↓
+    data['name_table']: str - название таблицы, где нужно изменить данные
+    data['column_primary']: str - название столбца, по которому искать строку, где изменить значения
+    data['primary_value']: str - то значение, по которому искать строку
+    data['columns']: dict['name_column'] = 'value' - ключи - это название столбцов, где изменить инфу, а их значения,
+    это на что изменить
+    """
+    set_string = 'SET '
+    count = 0
+    for name_column, value in data['columns'].items():
+        count += 1
+        if len(data['columns']) == count:
+            set_string += f'{name_column} == {value} '
+        else:
+            set_string += f'{name_column} == {value}, '
+    # print(set_string)
+
+    update = f'UPDATE {data["name_table"]} {set_string} WHERE {data["column_primary"]} = {data["primary_value"]}'
+    print(update)
+    cur.execute(update)
+    base.commit()
 
 
 async def sql_add_command(state):

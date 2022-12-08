@@ -6,6 +6,7 @@ from aiogram import types, Dispatcher
 from admin.add_new_students.add_new_students import AddNewStudent, MessageForCallback
 from keyboard.keyboard_admin.keyboard_add_new_student import inline_kb_groups_func
 from aiogram.dispatcher.filters import Text
+from admin.moderarot.moderator import Moderator
 from data_base.sqllite_db import sql_get_all_groups, sql_admin_add_student_in_table_group, \
     sql_admin_add_student_in_table_group_delete_row, sql_get_groups_of_student
 
@@ -23,6 +24,9 @@ message_for_add_in_group_callback = MessageForCallback()  # для состав�
 # @dp.message_handler(commands=['new_student'], state=None)
 async def add_new_student_process_command(message: types.Message):
     """команда по которой запускаем мушину состояний, для добавления нового студента"""
+    if not Moderator().check_moderator(id_telegram=message.from_user.id):
+        await message.reply(f'Ты не модератор!')
+        return
     await FSMAdminAddNewStudent.num_card_student.set()
     await message.reply('Вы решили добавить нового студента, введите его <b>номер зачётки</b>')
 
@@ -34,7 +38,7 @@ async def add_new_student_num_card_student_process_command(message: types.Messag
     async with state.proxy() as data:
         data['num_student_card'] = message.text
     if not AddNewStudent(data).check_num_card_student():
-        await message.reply(f'Студент с номером зачётки {data.get("num_card_student")} уже присутствует, но вы можете'
+        await message.reply(f'Студент с номером зачётки {data.get("num_student_card")} уже присутствует, но вы можете'
                             f' изменить по нему данные, либо воспользуйтесь командой /отмена что бы не изменять по нему'
                             f' информацию')
     await message.reply('Теперь введите <b>имя студента</b>')

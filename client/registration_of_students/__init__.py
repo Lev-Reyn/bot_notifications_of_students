@@ -1,2 +1,2 @@
-from client.registration_of_students import for_registration
+from client.registration_of_students import registration_student
 from client.registration_of_students import registration_student_handlers

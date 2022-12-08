@@ -4,6 +4,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from create_bot import dp
 from aiogram import types, Dispatcher
 from data_base.sqllite_db import sql_add_new_table_group_command, sql_get_all_groups
+from admin.moderarot.moderator import Moderator
 
 
 class FSMAdminAddNewGroup(StatesGroup):
@@ -12,6 +13,9 @@ class FSMAdminAddNewGroup(StatesGroup):
 
 # @dp.message_handler(commands=['new_group'], state=None)
 async def add_new_group_process_command(message: types.Message):
+    if not Moderator().check_moderator(id_telegram=message.from_user.id):
+        await message.reply(f'Ты не модератор!')
+        return
     """команда по которой запускаем мушину состояний, для добавления новой группы"""
     await FSMAdminAddNewGroup.name_group.set()
     await message.reply('введите название для новой группы')
