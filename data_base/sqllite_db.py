@@ -84,6 +84,7 @@ def sql_get_row(table='main_data_base', num_student_card=False, id=False, id_tel
     elif id:
         groups = cur.execute(
             'SELECT * FROM {0} WHERE id == {1}'.format(table, id)).fetchmany()
+        # print(groups, 2, 'sql_get_row')
     elif id_telegram:
         groups = cur.execute(
             'SELECT * FROM {0} WHERE id_telegram == {1}'.format(table, id_telegram)).fetchmany()

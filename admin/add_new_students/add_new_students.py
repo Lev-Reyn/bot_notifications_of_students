@@ -43,7 +43,7 @@ class MessageForCallback:
 
     def add_in_group_message(self, callback_query: types.CallbackQuery):
         """метод, который составляет из нажатых inline кнопок сообщение, в какие группы добавить """
-        num_group = int(callback_query.data.replace('group_', ''))
+        num_group = int(callback_query.data.replace('add_in_group_', ''))
         groups = sql_get_all_groups()
         for group in groups:
             if group['num_group'] == num_group:

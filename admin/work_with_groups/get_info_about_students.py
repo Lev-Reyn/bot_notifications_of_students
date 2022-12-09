@@ -11,7 +11,8 @@ class GetInfoAboutStudents:
         self.status = {
             1: 'activ',
             0: 'blocked',
-            -1: 'no activated'
+            -1: 'no activated',
+            None: 'error'
         }
 
         all_id_students = sql_get_one_column(name_table='main_data_base', name_column='id')  # id всех студентов
@@ -22,11 +23,22 @@ class GetInfoAboutStudents:
             'count_student': len(all_id_students),
             'activ': 0,
             'blocked': 0,
-            'no activated': 0
+            'no activated': 0,
+            'error': 0
+
         }
         for id_student in all_id_students:
+            # print('id student', id_student)
             groups = sql_get_groups_of_student(id=id_student)  # узнаём в каких группах находится студент
-            info_about_alone_student = sql_get_row(table=f'group_{groups[0]}', id=id_student)[0][0:5]
+            # print(groups, 'groups', f'group_{groups[0]}')
+            try:
+                info_about_alone_student = sql_get_row(table=f'group_{groups[0]}', id=id_student)[0][0:5]
+            except TypeError:
+                num_student_card = sql_get_row(table='main_data_base', id=id_student)[0][2]
+                print(num_student_card)
+                info_about_alone_student = [None, num_student_card, None, None, None]
+                # continue
+            # print(info_about_alone_student)
             # считаем сколько студентов зарегистрировались в боте (active), сколько заблокировали бота (blocked),
             # и сколько не активировали бота (no activated)
             self.count_students_dict[self.status.get(info_about_alone_student[4])] += 1
@@ -55,6 +67,8 @@ class GetInfoAboutStudents:
                f'\n' \
                f'✅ из них <b>зарегистрировались {self.count_students_dict["activ"]}\n' \
                f'\n' \
-               f'🟨 не зарегистрировались {self.count_students_dict["no activated"]}</b>\n' \
+               f'🟨 не зарегистрировались {self.count_students_dict["no activated"]}\n' \
                f'\n' \
-               f'❌ заблокировали {self.count_students_dict["blocked"]}\n'
+               f'❌ заблокировали {self.count_students_dict["blocked"]}\n' \
+               f'\n' \
+               f'‼️ произошла ошибка {self.count_students_dict["error"]}</b>'

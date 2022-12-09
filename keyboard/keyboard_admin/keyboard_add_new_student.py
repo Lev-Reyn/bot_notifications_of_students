@@ -14,7 +14,7 @@ def inline_kb_groups_func():
     for group in groups:
         lst_inline_buttons_add_new_students.append(
             InlineKeyboardButton(f'id {group["num_group"]} | {group["name_group"]}',
-                                 callback_data=f'group_{group["num_group"]}'),
+                                 callback_data=f'add_in_group_{group["num_group"]}'),
         )
     lst_inline_buttons_add_new_students.append(
         InlineKeyboardButton(f'Отправить', callback_data=f'send_groups'),)

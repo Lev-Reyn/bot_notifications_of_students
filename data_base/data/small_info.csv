@@ -1,5 +1,4 @@
 id,num_student_card,name_student,id_telegram,Status,groups
-1,1111,Георгий азиатцев,5352265596,activ,"[0, 1]"
-2,2222,Илья Пидорасов,,no activated,[0]
-3,6666,Виктор Валерьевич,,no activated,"[0, 1]"
-4,9999,Мистер Бин,,no activated,"[1, 2]"
+1,65432554,Юля Уварова,,no activated,[1]
+2,54322345,Ирина Боб,664295561,activ,"[1, 2]"
+3,43245543,,,error,[1]

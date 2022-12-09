@@ -62,7 +62,7 @@ async def update_num_text(message: types.Message, new_value):
     await message.edit_text(f"{new_value}", reply_markup=inline_kb_groups_func())
 
 
-# @dp.callback_query_handler(Text(startswith="group_"), state=FSMAdminAddNewStudent.group_callback)
+# @dp.callback_query_handler(Text(startswith="add_in_group_"), state=FSMAdminAddNewStudent.group_callback)
 async def process_callback_kb_keyboard_groups(callback_query: types.CallbackQuery, state: FSMContext):
     print(callback_query.data)
     message_groups = message_for_add_in_group_callback.add_in_group_message(callback_query)
@@ -95,7 +95,7 @@ def register_handlers_admin_add_new_group(dp: Dispatcher):
                                 state=FSMAdminAddNewStudent.num_card_student)
     dp.register_message_handler(add_new_student_name_student_process_command, state=FSMAdminAddNewStudent.name_student)
     dp.register_message_handler(add_new_student_group_process_command, state=FSMAdminAddNewStudent.group),
-    dp.register_callback_query_handler(process_callback_kb_keyboard_groups, Text(startswith="group_"),
+    dp.register_callback_query_handler(process_callback_kb_keyboard_groups, Text(startswith="add_in_group_"),
                                        state=FSMAdminAddNewStudent.group_callback),
     dp.register_callback_query_handler(process_callback_kb_keyboard_groups_send, Text(startswith="send_groups"),
                                        state=FSMAdminAddNewStudent.group_callback)
