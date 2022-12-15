@@ -78,8 +78,8 @@ async def process_callback_kb_keyboard_groups_send(callback_query: types.Callbac
 async def add_new_student_group_process_command(message: types.Message, state: FSMContext):
     """следующая команда (запускается в process_callback_kb_keyboard_groups_send) в машине состояний,
     которая принимает группу в которой будет студент"""
-    await message.reply('пока что работает' + message.text)
-    await message.reply(str(message_for_add_in_group_callback.num_groups))
+    # await message.reply('пока что работает' + message.text)
+    # await message.reply(str(message_for_add_in_group_callback.num_groups))
 
     async with state.proxy() as data:
         data['group'] = message_for_add_in_group_callback.num_groups  # номера всех групп, куда добавить

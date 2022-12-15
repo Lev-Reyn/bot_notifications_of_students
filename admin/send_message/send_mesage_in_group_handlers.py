@@ -13,7 +13,6 @@ from admin.send_message.yes_no_other_handlers import send_message
 from client.registration_of_students.registration_student_handlers import cancel_process_command
 
 
-
 class FSMAdminSendMessageInGroup(StatesGroup):
     message = State()
     callback_group = State()

@@ -58,10 +58,17 @@ def sql_admin_add_student_in_table_group(data, num_group: int):
     id = cur.execute(
         'SELECT id FROM main_data_base WHERE num_student_card == {0}'.format(data.get('num_student_card'))).fetchone()[
         0]
+    id_telegram = cur.execute(
+        'SELECT id_telegram FROM main_data_base WHERE num_student_card == {0}'.format(
+            data.get('num_student_card'))).fetchone()[0]
+    status = -1
+    if id_telegram != None:  # раз уж есть id_telegram, то скорей всего чел активировал всё-таки (но вдруг заблокировал)
+        status = 1
 
     cur.execute(
-        'INSERT INTO group_{0}(id, num_student_card, name_student, Status) VALUES(?, ?, ?, ?)'.format(num_group),
-        (id, data.get('num_student_card'), data.get('name_student'), -1))
+        'INSERT INTO group_{0}(id, num_student_card, name_student, id_telegram, Status) VALUES(?, ?, ?, ?, ?)'.format(
+            num_group),
+        (id, data.get('num_student_card'), data.get('name_student'), id_telegram, status))
     base.commit()
 
     print('данные добавлены', id, data.get('num_student_card'), data.get('name_student'), -1)
@@ -112,10 +119,13 @@ def sql_admin_add_student_in_table_groups(data, add_or_update=True):
     add_or_update = True - если нового студента добавляем
     add_or_update = False - если обновить данные по студенту нужно (то есть старую информацию удалить и новую закинуть)
     """
+
     if not add_or_update:  # если нет, значит это на обновление данных (удаляем старые и добавляем новые)
-        groups = sql_get_groups_of_student(num_student_card=data.get('num_student_card'))
+        groups = sql_get_groups_of_student(num_student_card=data.get('num_student_card'))  # нужно удалить данные во
+        # всех этих группах, так как студент теперь может находится в других группах
         for num_group in groups:
-            sql_admin_add_student_in_table_group_delete_row(data=data, num_group=num_group)
+            # нужно проверить, а вдруг там был сбой и нет инфы о студенте
+            sql_admin_add_student_in_table_group_delete_row(data=data, num_group=num_group)  # удаляем старые данные
 
     for num_group in data.get('group'):
         sql_admin_add_student_in_table_group(data, num_group=num_group)
