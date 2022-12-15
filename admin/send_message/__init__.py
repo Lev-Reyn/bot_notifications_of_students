@@ -1,1 +1,2 @@
 from admin.send_message import send_mesage_in_group_handlers
+from admin.send_message import send_message_in_group

@@ -24,6 +24,6 @@ send_mesage_in_group_handlers.register_handlers_admin_send_message_in_group(dp)
 
 executor.start_polling(dp, skip_updates=False, on_startup=on_start)
 
-# исправить ошибки и доработать команду send_message_in_group
+# доработать при изменении данных о студенте, что бы его id_telegram не терялся
+# доработать команду send_message_in_group (саму отправку в группы, а точнее... нужно добавить машину состояний и рабочие кнопки)
 # доработать команду get_small_info, что бы в группах показывались не номера групп, а названия
-# рассылка сообщений в группы (через сообщения в боте пока что)

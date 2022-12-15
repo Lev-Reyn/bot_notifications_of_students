@@ -76,7 +76,7 @@ async def process_callback_kb_keyboard_groups_send(callback_query: types.Callbac
 
 # @dp.message_handler(state=FSMAdminAddNewStudent.group)
 async def add_new_student_group_process_command(message: types.Message, state: FSMContext):
-    """следующая команда (запускается после add_new_student_name_student_process_command) в машине состояний,
+    """следующая команда (запускается в process_callback_kb_keyboard_groups_send) в машине состояний,
     которая принимает группу в которой будет студент"""
     await message.reply('пока что работает' + message.text)
     await message.reply(str(message_for_add_in_group_callback.num_groups))

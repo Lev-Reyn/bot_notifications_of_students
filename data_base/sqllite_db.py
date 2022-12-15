@@ -173,7 +173,7 @@ def sql_get_all_groups():
 
 def sql_update_row(data: dict):
     """
-    data: dict - принимает словарь в качкстве аргумента, с такой структурой ↓
+    data: dict - принимает словарь в качестве аргумента, с такой структурой ↓
     data['name_table']: str - название таблицы, где нужно изменить данные
     data['column_primary']: str - название столбца, по которому искать строку, где изменить значения
     data['primary_value']: str - то значение, по которому искать строку
@@ -193,6 +193,58 @@ def sql_update_row(data: dict):
     update = f'UPDATE {data["name_table"]} {set_string} WHERE {data["column_primary"]} = {data["primary_value"]}'
     print(update)
     cur.execute(update)
+    base.commit()
+
+
+def sql_create_new_column(name_table: str, name_column: str, type_column='INTEGER'):
+    """создаэт новый столбец по имени таблицы и названию столбца какой создать в данной таблице
+    """
+    cur.execute('ALTER TABLE {0} ADD COLUMN {1} {2}'.format(name_table, name_column, type_column))
+    base.commit()
+
+
+def sql_create_new_table(name_table: str, *args):
+    """
+    создаёт новую таблицу в базе данных
+    :param name_table: название таблицы
+    :param args: все назавания столбцов, можно перердавать с их типами данных
+    :return: ничего не возвращает, просто создаёт таблицу
+    """
+    # создаём запрос
+    request = f'CREATE TABLE IF NOT EXISTS {name_table} ('
+    for i, column in enumerate(args):
+        if i != len(args) - 1:
+            request += column + ', '
+        else:
+            request += column + ')'
+
+    base.execute(request)
+    base.commit()
+
+
+def add_new_row(data: dict):
+    """
+    добавить новую строку в таблицу
+    :param data: словарь, имеет такой вид:
+        data['name_table'] = str (название таблицы, куда вставить новую строку)
+        data['names_columns'] = [] (список с названиями столбцов)
+        data['values'] = [] (список со значениями который подставить, порядок важен, относительно верхнего списка)
+    :return
+    """
+    request = f'INSERT INTO {data["name_table"]} ('
+    for i, column in enumerate(data['names_columns']):
+        if i != len(data['names_columns']) - 1:
+            request += f'{column}, '
+        else:
+            request += f'{column})'
+    request += 'VALUES ('
+    for i, column in enumerate(data['values']):
+        if i != len(data['values']) - 1:
+            request += f'{column}, '
+        else:
+            request += f'{column})'
+    print(request)
+    cur.execute(request)
     base.commit()
 
 

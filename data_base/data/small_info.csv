@@ -1,4 +1,4 @@
 id,num_student_card,name_student,id_telegram,Status,groups
-1,65432554,Юля Уварова,,no activated,[1]
-2,54322345,Ирина Боб,664295561,activ,"[1, 2]"
-3,43245543,,,error,[1]
+1,1111,Первый Лев Рейн,664295561,activ,[1]
+2,2222,Второй Лев Рейн,,no activated,"[0, 2]"
+3,3333,Третья зовут Юлей,,no activated,[1]
