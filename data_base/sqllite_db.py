@@ -169,7 +169,7 @@ def sql_admin_add_new_student(data, command=True):
             base.commit()
 
 
-def sql_get_all_groups():
+def sql_get_all_groups() -> list:
     """получить все группы, которые есть (список словарей где написаны номера групп и их названия)"""
     groups = cur.execute("SELECT * FROM names_groups").fetchall()
     for i, group in enumerate(groups):
@@ -256,6 +256,33 @@ def add_new_row(data: dict):
     print(request)
     cur.execute(request)
     base.commit()
+
+
+def sql_get_columns_of_table(name_table: str) -> list:
+    """
+    достаёт список названий столбцов в таблице
+    :param name_table: название таблицы, из которой хотим получить названия столбцов
+    :return: список названий столбцов
+    """
+    result = cur.execute("pragma table_info({0})".format(name_table)).fetchall()
+    result = [elem[1] for elem in result]
+    return result
+
+
+def sql_get_id_telegram_where(column_need: str, name_table: str, column_where: str, where):
+    """
+    достать все значения одного столбца где что-то в другом столбцу
+    :param column_need: столбец, который нужен в списке
+    :param name_table: название таблицы, в которой ищем
+    :param column_where: столбец по которому ищем
+    :param where: чему должно быть равно значение в column_where
+    :return: список
+    """
+    if where is None:
+        result = cur.execute(f'SELECT {column_need} FROM {name_table} WHERE {column_where} is null').fetchall()
+        return [elem[0] for elem in result]
+    result = cur.execute(f'SELECT {column_need} FROM {name_table} WHERE {column_where} == {where}').fetchall()
+    return [elem[0] for elem in result]
 
 
 async def sql_add_command(state):

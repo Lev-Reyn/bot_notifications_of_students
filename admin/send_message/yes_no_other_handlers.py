@@ -1,4 +1,4 @@
-from aiogram import types
+from aiogram import types, Dispatcher
 from aiogram.utils.exceptions import BotBlocked, ChatNotFound
 from keyboard.keyboard_admin.keyboard_send_message_in_group import inline_kb_send_message_in_group_yes_no_other
 from aiogram.dispatcher.filters.state import State, StatesGroup
@@ -40,7 +40,7 @@ async def update_num_text_yes_no_other(message: types.Message, new_value,
         await message.edit_text(f"{new_value}", reply_markup=keyboard)
 
 
-@dp.callback_query_handler(Text(startswith="yes_no_other_"))
+# @dp.callback_query_handler(Text(startswith="yes_no_other_"))
 async def process_callback_kb_keyboard_yes_no_other(callback_query: types.CallbackQuery, state: FSMContext):
     print(callback_query.data)
     callback_data = callback_query.data.replace('yes_no_other_', '')
@@ -56,7 +56,7 @@ async def process_callback_kb_keyboard_yes_no_other(callback_query: types.Callba
         await update_num_text_yes_no_other(callback_query.message, message_for_student)
 
 
-@dp.message_handler(state=FSMAdminOther.callback_answer)
+# @dp.message_handler(state=FSMAdminOther.callback_answer)
 async def send_message_in_group_message_process_command(message: types.Message, state: FSMContext):
     """следующая команда (запускается после process_callback_kb_keyboard_yes_no_other если студент ответил other) в
     машине состояний, которая принимает текст сообщения для ответа на вопрос"""
@@ -69,9 +69,7 @@ async def send_message_in_group_message_process_command(message: types.Message, 
 
     await state.finish()
 
-# @dp.callback_query_handler(Text(startswith="send_send_message_in_group"))
-# async def process_callback_kb_keyboard_send_send_message_in_group(callback_query: types.CallbackQuery):
-#     # print(messege_send_message_in_group_callback.num_groups,
-#     #       messege_send_message_in_group_callback.messege_send_message_in_group_callback, 'TEST')
-#     # await add_new_student_group_process_command(callback_query.message, state)
-#     await send_message_in_group_group_process_command(callback_query.message, state)
+
+def register_handlers_admin_yes_no_other(dp: Dispatcher):
+    dp.register_message_handler(process_callback_kb_keyboard_yes_no_other, Text(startswith="yes_no_other_")),
+    dp.register_message_handler(send_message_in_group_message_process_command, state=FSMAdminOther.callback_answer)
