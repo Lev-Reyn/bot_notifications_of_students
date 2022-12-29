@@ -10,14 +10,15 @@ from admin.send_message import yes_no_other_handlers
 from data_base import sqllite_db
 import asyncio
 from client.reminder.reminder_handlers import scheduler
-
+from data_base import maria_db
 
 
 async def on_start(_):
     print('Bot is online')
     asyncio.create_task(scheduler())
     sqllite_db.sql_start()  # подключаем базу данных, и создаём нужные таблицы, если их нет
-
+    maria_db.connection_with_mariadb()  # подключаемся к mariadb
+    asyncio.create_task(maria_db.scheduler_mariadb())
 
 
 # регистрируем хендлеры
@@ -31,6 +32,6 @@ yes_no_other_handlers.register_handlers_admin_yes_no_other(dp)
 
 executor.start_polling(dp, skip_updates=False, on_startup=on_start)
 
-# добавить напоминание о том, что бы ответили на вопрос
+# доработать maria_db так, что бы при изменении данных в phpmyadmin, они виделись ботом
 # добавить комманду, по которой можно добавить сразу много студентов, отправляя csv файлик в бот, конструкция id, num_student_card, name_student
 # доработать команду get_small_info, что бы в группах показывались не только номера групп, а так же названия

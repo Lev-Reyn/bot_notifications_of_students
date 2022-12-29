@@ -195,7 +195,7 @@ def sql_update_row(data: dict):
     for name_column, value in data['columns'].items():
         count += 1
         if len(data['columns']) == count:
-            set_string += f'{name_column} == {value} '
+            set_string += f'{name_column} == {value}'
         else:
             set_string += f'{name_column} == {value}, '
     # print(set_string)
@@ -271,7 +271,7 @@ def sql_get_columns_of_table(name_table: str) -> list:
 
 def sql_get_id_telegram_where(column_need: str, name_table: str, column_where: str, where):
     """
-    достать все значения одного столбца где что-то в другом столбцу
+    достать все значения одного столбца где что-то в другом столбе
     :param column_need: столбец, который нужен в списке
     :param name_table: название таблицы, в которой ищем
     :param column_where: столбец по которому ищем

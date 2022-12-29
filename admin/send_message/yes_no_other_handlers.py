@@ -40,7 +40,7 @@ async def update_num_text_yes_no_other(message: types.Message, new_value,
         await message.edit_text(f"{new_value}", reply_markup=keyboard)
 
 
-# @dp.callback_query_handler(Text(startswith="yes_no_other_"))
+@dp.callback_query_handler(Text(startswith="yes_no_other_"))
 async def process_callback_kb_keyboard_yes_no_other(callback_query: types.CallbackQuery, state: FSMContext):
     print(callback_query.data)
     callback_data = callback_query.data.replace('yes_no_other_', '')
@@ -56,7 +56,7 @@ async def process_callback_kb_keyboard_yes_no_other(callback_query: types.Callba
         await update_num_text_yes_no_other(callback_query.message, message_for_student)
 
 
-# @dp.message_handler(state=FSMAdminOther.callback_answer)
+@dp.message_handler(state=FSMAdminOther.callback_answer)
 async def send_message_in_group_message_process_command(message: types.Message, state: FSMContext):
     """следующая команда (запускается после process_callback_kb_keyboard_yes_no_other если студент ответил other) в
     машине состояний, которая принимает текст сообщения для ответа на вопрос"""

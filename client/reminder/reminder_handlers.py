@@ -1,14 +1,16 @@
+"""здесь вероятно в дальнейщем будут хендлеры, но не факт, а пока что просто напоминает студентам, которые не
+ответили на последний вопрос, о том, что пора бы ответить"""
 from aiogram import types, Dispatcher
 from data_base.sqllite_db import sql_get_columns_of_table, sql_get_all_groups, sql_get_id_telegram_where
 from create_bot import bot
 import asyncio
 import aioschedule
 
-time_reminder = '04:03'  # время отправки напоминания (каждый день отправляется)
+time_reminder = '04:20'  # время отправки напоминания (каждый день отправляется)
 
 
 async def send_reminder():
-    """собирает id всех студентов, которые не ответили на последний вопрос и наплминет ответить"""
+    """собирает id всех студентов, которые не ответили на последний вопрос и напоминает ответить"""
     groups_list = sql_get_all_groups()
     for group in groups_list:
         column_answer = sql_get_columns_of_table(name_table=f"group_{group['num_group']}")[-2]
@@ -22,6 +24,7 @@ async def send_reminder():
 
 async def scheduler():
     aioschedule.every().day.at(time_reminder).do(send_reminder)
+    # aioschedule.every(3).seconds.do(send_reminder)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(5)
