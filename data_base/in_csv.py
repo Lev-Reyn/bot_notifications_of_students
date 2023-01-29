@@ -3,7 +3,7 @@ import os
 
 
 class InCsv:
-    def __init__(self, name_file: str, fieldnames: list):
+    def __init__(self, name_file: str, fieldnames: list, delimiter=','):
         """
         создаётся csv файл если такого нет, или открывается тот, который есть уже
         name_file - название файла, проверяет, если такого файла нет, то создаёт,
@@ -11,9 +11,10 @@ class InCsv:
         """
         self.name_file = name_file
         self.fieldnames = fieldnames
+        self.delimiter = delimiter
         if not os.path.exists(self.name_file):
             with open(self.name_file, 'w', newline='') as csvfile:
-                writer = csv.DictWriter(csvfile, fieldnames=self.fieldnames)
+                writer = csv.DictWriter(csvfile, fieldnames=self.fieldnames, delimiter=self.delimiter)
                 writer.writeheader()
 
     def write(self, lst: list):
@@ -23,7 +24,7 @@ class InCsv:
                 lst: dict[name_column] = value_for_that_column
                 """
         with open(self.name_file, 'w', newline='') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=self.fieldnames)
+            writer = csv.DictWriter(csvfile, fieldnames=self.fieldnames, delimiter=self.delimiter)
             writer.writeheader()
             for row in lst:
                 writer.writerow(row)
@@ -31,7 +32,7 @@ class InCsv:
     def read(self) -> list:
         self.lst_past = []
         with open(self.name_file, newline='') as csvfile:
-            reader = csv.DictReader(csvfile)
+            reader = csv.DictReader(csvfile, delimiter=self.delimiter)
             for row in reader:
                 self.lst_past.append(row)
         return self.lst_past

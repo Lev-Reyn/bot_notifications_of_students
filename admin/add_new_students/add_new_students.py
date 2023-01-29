@@ -29,9 +29,9 @@ class AddNewStudent:
     def add_new_student_with_answer(self):
         if self.add_new_student():
             return f'Студент <b>{self.data.get("name_student")}</b>\nномер зачётки: <b>' \
-                   f'{self.data.get("num_student_card")}</b>\nуспешно добавлен в группу <b>{self.data.get("group")}</b>'
+                   f'{self.data.get("num_student_card")}</b>\nуспешно добавлен в группы <b>{self.data.get("group")}</b>'
         else:
-            return f'Данные пидора изменены'
+            return f'Данные студента изменены'
 
 
 class MessageForCallback:
