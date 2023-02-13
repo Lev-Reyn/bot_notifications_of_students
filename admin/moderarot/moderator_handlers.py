@@ -6,8 +6,8 @@ from admin.moderarot.moderator import Moderator
 # @dp.message_handler(commands=['moderator'], is_chat_admin=True)
 async def update_moderator__process_command(message: types.Message):
     """изменяет модератора (админа)"""
-    # if 'password' not in message.text:  # активировать позже, когда будет бот закончен
-    #     return
+    if '1234' not in message.text:  # активировать позже, когда будет бот закончен
+        return
     Moderator().update_moderator(id_telegram=message.from_user.id)
     ID_MODERATOR = message.from_user.id
     await message.reply(f'Модератор изменён, теперь id {ID_MODERATOR}')

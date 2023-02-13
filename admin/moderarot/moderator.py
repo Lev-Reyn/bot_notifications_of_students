@@ -16,3 +16,7 @@ class Moderator:
             return True
         else:
             return False
+
+    def get_moderator_id(self):
+        file = InJson('data_base/moderator.json')
+        return file.reed_json()[0]

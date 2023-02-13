@@ -11,7 +11,7 @@ def sql_start():
 
     # создаём основную таблицу main_data_base
     base.execute('CREATE TABLE IF NOT EXISTS main_data_base'
-                 '(id INTEGER PRIMARY KEY, id_telegram INTEGER, num_student_card TEXT)')
+                 '(id INTEGER PRIMARY KEY, id_telegram INTEGER, num_student_card TEXT, alias TEXT)')
     base.commit()
 
     # создаём таблицу names_groups (там id групп и их названия)

@@ -1,0 +1,5 @@
+aiogram
+asyncio
+aioschedule
+pymysql
+typing

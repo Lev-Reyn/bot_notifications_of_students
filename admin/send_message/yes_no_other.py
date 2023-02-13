@@ -14,16 +14,16 @@ class YesNoOther:
         if 'no' in button_touch:
             self.write_answer_in_data(answer='no')
             self.message_for_student += f'Ответ <b>нет</b> учтён на вопрос ' \
-                                        f'<b>{callback_query.message.text}</b> {self.data}'
+                                        f'<b>{callback_query.message.text}</b> '
         elif 'yes' in button_touch:
             self.write_answer_in_data(answer='yes')
             self.message_for_student += f'Ответ <b>Да</b> учтён на вопрос ' \
-                                        f'<b>{callback_query.message.text}</b> {self.data}'
+                                        f'<b>{callback_query.message.text}</b> '
         elif 'other' in button_touch:
             self.write_answer_in_data(answer=other_answer)
 
             self.message_for_student += f'Ответ <b>{other_answer}</b> учтён на вопрос ' \
-                                        f'<b>{callback_query.message.text}</b> {self.data}'
+                                        f'<b>{callback_query.message.text}</b> '
         return self.message_for_student
 
     def write_answer_in_data(self, answer: str):

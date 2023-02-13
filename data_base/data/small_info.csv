@@ -8,3 +8,5 @@ id,num_student_card,name_student,id_telegram,Status,groups
 7,4321234,lev,,no activated,[2]
 8,54321453,gleb,,no activated,"[0, 1]"
 9,3443,mama,,no activated,"[0, 1]"
+10,9876543,Иван Иванов,,no activated,"[1, 2]"
+11,65478329,Илья Аболтусов,,no activated,"[0, 3]"
